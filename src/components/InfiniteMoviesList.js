@@ -85,7 +85,7 @@ class InfiniteMoviesList extends React.PureComponent {
 
   render() {
     const {classes} = this.props;
-    const width = window.innerWidth;
+    const width = 0.85 * window.innerWidth;
     const height = window.innerHeight;
     const {movies, hasMore} = this.props;
     const rowCount = getRowsAmount(width, movies.length, hasMore);
