@@ -1,13 +1,13 @@
-import React from 'react';
+import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
+import React from 'react';
+import { FixedSizeList as List } from 'react-window';
 // import {InfiniteLoader, List, WindowScroller, AutoSizer} from 'react-virtualized';
 import InfiniteLoader from 'react-window-infinite-loader';
-import {FixedSizeList as List} from 'react-window';
 // import { WindowScroller, AutoSizer } from "react-virtualized";
 import MovieCard from '../containers/MovieCard';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import {withStyles} from '@material-ui/core/styles';
 
 const ITEM_WIDTH = 400;
 const ITEM_HEIGHT = 360;
@@ -79,7 +79,7 @@ class InfiniteMoviesList extends React.PureComponent {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.reset && this.props.reset && this.infiniteLoaderRef.current) {
-      this.infiniteLoaderRef.current.resetLoadMoreRowsCache(true);
+      this.infiniteLoaderRef.current.resetloadMoreItemsCache(true);
     }
   }
 
@@ -89,13 +89,13 @@ class InfiniteMoviesList extends React.PureComponent {
     const height = window.innerHeight;
     const {movies, hasMore} = this.props;
     const rowCount = getRowsAmount(width, movies.length, hasMore);
-    const rowRenderer = ({index, style, key}) => {
+    const rowRenderer = ({index, style}) => {
       const {movies, classes} = this.props;
       const maxItemsPerRow = getMaxItemsAmountPerRow(width);
       const moviesIds = generateIndexesForRow(index, maxItemsPerRow, movies.length).map(movieIndex => movies[movieIndex]);
     
       return (
-        <div style={style} key={key} className={classes.row}>
+        <div style={style} className={classes.row}>
           {moviesIds.map(movieId => (
             <RowItem key={movieId} movieId={movieId} classes={classes}/>
           ))}
@@ -116,11 +116,11 @@ class InfiniteMoviesList extends React.PureComponent {
                 }}
                 loadMoreItems={this.loadMoreItems}
               >
-                {({onItemsRendered, registerChild}) => (
+                {({onItemsRendered, ref}) => (
                   <section>
                       <List
                         className={classes.grid}
-                        ref={registerChild}
+                        ref={ref}
                         height={height}
                         width={width}
                         itemCount={rowCount}
@@ -130,7 +130,7 @@ class InfiniteMoviesList extends React.PureComponent {
                       >
                       {rowRenderer}
                       </List>
-                      </section>
+                    </section>
                 )}
               </InfiniteLoader>
        );
